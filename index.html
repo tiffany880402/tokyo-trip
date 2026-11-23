@@ -920,6 +920,21 @@ ul.plain li::before{background:var(--terra);opacity:.6}
 .acct-r img,.acct-av{width:44px;height:44px;border-radius:50%;object-fit:cover;flex:none}
 .acct-av{display:grid;place-items:center;background:var(--green);color:var(--pine);font-weight:700;font-size:18px}
 .acct-r div{display:grid;min-width:0}.acct-r b{font-size:15px}.acct-r small{font-size:12.5px;color:var(--muted);overflow:hidden;text-overflow:ellipsis}
+
+/* 誰付了多少：依人數平均分滿一排 */
+.wp-g{display:flex!important;flex-wrap:wrap;gap:10px}
+.wp-c{flex:1 1 calc((100% - (var(--cols,2) - 1) * 10px) / var(--cols,2));min-width:0}
+.wp-g[data-cols="1"] .wp-c{display:grid;grid-template-columns:auto 1fr;grid-template-areas:"av nm" "av amt" "bar bar" "pills pills" "pct pct";justify-items:start;text-align:left;column-gap:14px;padding:18px 18px 14px}
+.wp-g[data-cols="1"] .wp-av{grid-area:av;width:60px;height:60px;font-size:26px}
+.wp-g[data-cols="1"] .wp-nm{grid-area:nm;margin:0;align-self:end}.wp-g[data-cols="1"] .wp-amt{grid-area:amt;font-size:26px}
+.wp-g[data-cols="1"] .wp-bar{grid-area:bar}.wp-g[data-cols="1"] .wp-pills{grid-area:pills;justify-content:flex-start}.wp-g[data-cols="1"] .wp-pct{grid-area:pct}
+.wp-g[data-cols="3"] .wp-c{padding:20px 8px 10px}
+.wp-g[data-cols="3"] .wp-av{width:42px;height:42px;font-size:18px}
+.wp-g[data-cols="3"] .wp-amt{font-size:16px}
+.wp-g[data-cols="3"] .wp-nm{font-size:14px}
+.wp-g[data-cols="3"] .wp-pills{flex-direction:column;align-items:center}
+.wp-g[data-cols="3"] .wp-pills span{font-size:10.5px;padding:1px 6px 1px 5px}
+.wp-g[data-cols="3"] .wp-crown{top:-17px}.wp-g[data-cols="3"] .wp-crown svg{width:20px;height:20px}
 </style>
 </head>
 <body>

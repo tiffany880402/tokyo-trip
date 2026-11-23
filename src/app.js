@@ -574,7 +574,8 @@ function renderMoney(){
     </div>
     <div class="card wp"><div class="sec-title"><span>誰付了多少</span><small>${mView}</small></div>
       ${people.length ? (() => { const tots = people.map(p => sum(S.exp.filter(e => e.payer === p))); const top = Math.max(...tots);
-        return `<div class="wp-g">${people.map((p,n) => { const mine = S.exp.filter(e => e.payer === p), t = tots[n], tone = WP_TONES[n % WP_TONES.length];
+        const cols = people.length <= 3 ? people.length : (people.length === 4 ? 2 : 3);
+        return `<div class="wp-g" style="--cols:${cols}" data-cols="${cols}">${people.map((p,n) => { const mine = S.exp.filter(e => e.payer === p), t = tots[n], tone = WP_TONES[n % WP_TONES.length];
         return `<div class="wp-c" style="--wb:${tone[0]};--wa:${tone[1]};--wi:${tone[2]}">
           <div class="wp-av">${esc([...nm(p)][0]||'?')}${t>0&&t===top&&people.length>1?`<span class="wp-crown">${crownI}</span>`:''}</div>
           <b class="wp-nm">${esc(nm(p))}</b>
