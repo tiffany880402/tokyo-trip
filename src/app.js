@@ -149,17 +149,25 @@ const DAYS = [
      {n:'澤村 NEWoMan 新宿', x:'麵包、早餐'}
    ]}]
  },
-{ date:'2027-01-04', wd:1, scene:'sea', area:'鎌倉・江之島', cl:[10,3], title:'鎌倉・江之島一日遊',
-   note:'Day 7 行程會調整，之後更新。下面先保留原本的鎌倉・江之島。',
+ { date:'2027-01-04', photo:'b_61_000', pos:'50% 62%', wd:1, scene:'shrine', area:'明治神宮・表參道・澀谷', cl:[10,3], title:'明治神宮・表參道・SHIBUYA SKY',
    items:[
- {t:'', photo:'w_kamakura', ti:'前往鎌倉', d:'從上野、東京站搭 JR 往鎌倉，約 1 小時多，用乘換案內查當天的班次。', dur:'', ic:'train', q:'鎌倉駅'},
- {t:'', photo:'w_hachimangu', ti:'鶴岡八幡宮・小町通', d:'新年期間參拜人很多。小町通邊逛邊吃。', dur:'', ic:'shrine', food:0, q:'鶴岡八幡宮'},
- {t:'', photo:'w_enoden', ti:'江之電', d:'鎌倉 → 江之島的沿海小火車，鎌倉高校前站可以拍平交道和海。', dur:'', ic:'train', q:'鎌倉高校前駅'},
- {t:'', photo:'w_enoshima', ti:'江之島', d:'看海、看夕陽，天氣好可以看到富士山。', dur:'', ic:'view', q:'江の島'},
- {t:'', ti:'回東京・整理行李', d:'明天回程，晚上把行李和伴手禮整理好！', dur:'', ic:'hotel'}
+ {t:'09:40', ti:'鶯谷 → 代代木', d:'08:30 起床刷牙洗臉，09:30 出門溜搭溜搭。山手線（池袋・新宿方面／內環線）。', dur:'20 分', ic:'train', q:'鶯谷駅'},
+ {t:'10:00', photo:'b_61_002', ti:'明治神宮', d:'供奉明治天皇和昭憲皇太后，1920 年 11 月 1 日創建，新年參拜人數年年日本第一。整片森林是人造的：全國捐來約 10 萬棵樹，現在完全看不出是人工林。供奉的是感情很好的天皇夫妻，所以求戀愛運、好姻緣。', dur:'1 小時', ic:'shrine', q:'明治神宮',
+   tips:['大鳥居：用樹齡超過 1,500 年的台灣檜木做的，高 12 公尺，是日本最大的木造明神鳥居','酒樽牆：參道一邊是日本清酒桶、一邊是葡萄酒桶，象徵明治時代把外國文化和日本傳統結合在一起','特別的籤「大御心」：不分吉凶，寫的是明治天皇和皇后作的 30 首和歌，附解說。黃色是皇后的、白色是天皇的，給祈求的人一個方向']},
+ {t:'11:00', ti:'表參道開始逛街！', d:'@cosme TOKYO、KIDDY LAND 💸', dur:'1 小時', ic:'shop', q:'@cosme TOKYO'},
+ {t:'12:00', photo:'b_60_000', ti:'找中餐吃', d:'一路上找找吃的：麺散、SHANTi 原宿店、AFURI 原宿。', dur:'2 小時', ic:'food', food:0, q:'麺散 原宿'},
+ {t:'14:00', ti:'Topologie 原宿旗艦店', d:'繼續散步看表參道。', dur:'30 分', ic:'shop', q:'Topologie 原宿'},
+ {t:'14:30', ti:'沿明治通り走到澀谷', d:'邊走邊逛，走路過去。', dur:'30 分', ic:'walk', q:'明治通り 渋谷'},
+ {t:'15:00', ti:'澀谷小八拍照', d:'忠犬八公像拍照，再走去 PUPPET SUNSUN STORE。', dur:'45 分', ic:'view', q:'ハチ公像'},
+ {t:'15:45', ti:'SHIBUYA SKY', d:'15:45 準備上去排隊，16:00 上頂樓。1 月初日落大約 16:40，剛好從夕陽看到夜景。', dur:'2 小時', ic:'view', q:'SHIBUYA SKY'},
+ {t:'18:00', ti:'晚餐・極味や 澀谷 PARCO', d:'澀谷逛起來⛄ 找飯吃！', dur:'2 小時', ic:'food', q:'極味や 渋谷パルコ'},
+ {t:'20:00', ti:'澀谷 → 鶯谷', d:'山手線（新宿・池袋方面／外環線）。', dur:'35 分', ic:'train', q:'渋谷駅'},
+ {t:'21:00', ti:'洗洗睡吧・收行李', d:'明天就要回家了，把行李和伴手禮收好！', dur:'', ic:'hotel', q:'LANDABOUT TOKYO 根岸3-4-5'}
 ],
-   food:[{name:'鎌倉吃的', list:[
-     {n:'鎌倉茶屋たばねのし', x:'鎌倉市小町 2-12-27'}
+   food:[{name:'原宿午餐', list:[
+     {n:'麺散（讚岐烏龍麵）', h:'11:30–22:00', x:'從簡單的讚岐烏龍麵到炒烏龍麵都有，現擀、現切、現煮，Q 彈有嚼勁。配菜也好吃，特別是鮪魚醃蘿蔔飯糰'},
+     {n:'SHANTi（湯咖哩）原宿店', h:'11:00–23:30', x:'2001 年在北海道創立的湯咖哩老店。帶骨雞腿和新鮮蔬菜大塊放進湯咖哩，辣度分 40 段以上可以自己調；配白飯、烤餅（naan），也能選花椰菜飯'},
+     {n:'AFURI 原宿', x:'柚子鹽拉麵'}
    ]}]
  },
  { date:'2027-01-05', wd:2, scene:'tower', area:'東京 → 桃園', cl:[10,2], title:'回家囉',
@@ -182,7 +190,7 @@ const FLIGHTS = {
 };
 
 /* ---------- Photos ---------- */
-const PHOTOS = {"d1": "./photos/d1.jpg", "d2": "./photos/d2.jpg", "d3": "./photos/d3.jpg", "d4": "./photos/d4.jpg", "d5": "./photos/d5.jpg", "d6": "./photos/d6.jpg", "w_kamakura": "./photos/w_kamakura.jpg", "w_hachimangu": "./photos/w_hachimangu.jpg", "w_enoden": "./photos/w_enoden.jpg", "w_enoshima": "./photos/w_enoshima.jpg", "w_nippori": "./photos/w_nippori.jpg", "w_keiseiueno": "./photos/w_keiseiueno.jpg", "w_naritasta": "./photos/w_naritasta.jpg", "w_tpe": "./photos/w_tpe.jpg", "b_26_000": "./photos/b_26_000.jpg", "b_27_002": "./photos/b_27_002.jpg", "b_29_006": "./photos/b_29_006.jpg", "b_30_000": "./photos/b_30_000.jpg", "b_34_000": "./photos/b_34_000.jpg", "b_34_002": "./photos/b_34_002.jpg", "b_34_004": "./photos/b_34_004.jpg", "b_35_000": "./photos/b_35_000.jpg", "b_35_008": "./photos/b_35_008.jpg", "b_36_004": "./photos/b_36_004.jpg", "b_38_000": "./photos/b_38_000.jpg", "b_39_000": "./photos/b_39_000.jpg", "b_40_000": "./photos/b_40_000.jpg", "b_41_004": "./photos/b_41_004.jpg", "b_42_006": "./photos/b_42_006.jpg", "b_45_002": "./photos/b_45_002.jpg", "b_46_004": "./photos/b_46_004.jpg", "b_47_000": "./photos/b_47_000.jpg", "b_48_000": "./photos/b_48_000.jpg", "b_50_000": "./photos/b_50_000.jpg", "b_50_002": "./photos/b_50_002.jpg", "b_51_002": "./photos/b_51_002.jpg", "b_53_002": "./photos/b_53_002.jpg", "b_55_000": "./photos/b_55_000.jpg", "b_55_002": "./photos/b_55_002.jpg", "b_56_002": "./photos/b_56_002.jpg", "b_56_004": "./photos/b_56_004.jpg", "b_58_000": "./photos/b_58_000.jpg", "b_58_002": "./photos/b_58_002.jpg", "b_58_006": "./photos/b_58_006.jpg", "u_akabane": "./photos/u_akabane.jpg", "u_stairs": "./photos/u_stairs.jpg", "u_maman": "./photos/u_maman.jpg"};
+const PHOTOS = {"d1": "./photos/d1.jpg", "d2": "./photos/d2.jpg", "d3": "./photos/d3.jpg", "d4": "./photos/d4.jpg", "d5": "./photos/d5.jpg", "d6": "./photos/d6.jpg", "w_kamakura": "./photos/w_kamakura.jpg", "w_hachimangu": "./photos/w_hachimangu.jpg", "w_enoden": "./photos/w_enoden.jpg", "w_enoshima": "./photos/w_enoshima.jpg", "w_nippori": "./photos/w_nippori.jpg", "w_keiseiueno": "./photos/w_keiseiueno.jpg", "w_naritasta": "./photos/w_naritasta.jpg", "w_tpe": "./photos/w_tpe.jpg", "b_26_000": "./photos/b_26_000.jpg", "b_27_002": "./photos/b_27_002.jpg", "b_29_006": "./photos/b_29_006.jpg", "b_30_000": "./photos/b_30_000.jpg", "b_34_000": "./photos/b_34_000.jpg", "b_34_002": "./photos/b_34_002.jpg", "b_34_004": "./photos/b_34_004.jpg", "b_35_000": "./photos/b_35_000.jpg", "b_35_008": "./photos/b_35_008.jpg", "b_36_004": "./photos/b_36_004.jpg", "b_38_000": "./photos/b_38_000.jpg", "b_39_000": "./photos/b_39_000.jpg", "b_40_000": "./photos/b_40_000.jpg", "b_41_004": "./photos/b_41_004.jpg", "b_42_006": "./photos/b_42_006.jpg", "b_45_002": "./photos/b_45_002.jpg", "b_46_004": "./photos/b_46_004.jpg", "b_47_000": "./photos/b_47_000.jpg", "b_48_000": "./photos/b_48_000.jpg", "b_50_000": "./photos/b_50_000.jpg", "b_50_002": "./photos/b_50_002.jpg", "b_51_002": "./photos/b_51_002.jpg", "b_53_002": "./photos/b_53_002.jpg", "b_55_000": "./photos/b_55_000.jpg", "b_55_002": "./photos/b_55_002.jpg", "b_56_002": "./photos/b_56_002.jpg", "b_56_004": "./photos/b_56_004.jpg", "b_58_000": "./photos/b_58_000.jpg", "b_58_002": "./photos/b_58_002.jpg", "b_58_006": "./photos/b_58_006.jpg", "u_akabane": "./photos/u_akabane.jpg", "u_stairs": "./photos/u_stairs.jpg", "u_maman": "./photos/u_maman.jpg", "b_60_000": "./photos/b_60_000.jpg", "b_61_000": "./photos/b_61_000.jpg", "b_61_002": "./photos/b_61_002.jpg"};
 
 
 /* ---------- Scenes（還沒有照片的日子用插畫） ---------- */
