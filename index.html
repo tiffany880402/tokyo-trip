@@ -11,7 +11,14 @@
 <link rel="manifest" href="./manifest.json">
 <link rel="apple-touch-icon" href="./icon-180.png">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%23B3262E'/%3E%3Cpath d='M32 10 22 54h4l2-8h8l2 8h4zM29 40l3-14 3 14z' fill='%23FFFDF9'/%3E%3C/svg%3E">
-<style>:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0}img{max-width:100%}[hidden]{display:none!important}</style>
+<style>:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0}img{max-width:100%}[hidden]{display:none!important}
+/* 誰付了多少：高度固定，切換幣別不跳動 */
+.wp-c{align-content:start}
+.wp-nm,.wp-amt{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:100%}
+.wp-pills{display:grid!important;grid-template-columns:1fr;gap:4px;width:100%}
+.wp-pills span{justify-content:center;white-space:nowrap;overflow:hidden;min-width:0;padding:2px 6px!important}
+.wp-g[data-cols="1"] .wp-pills{grid-template-columns:repeat(2,max-content);justify-content:start}
+</style>
 <title>東京年末自由行 2026</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
