@@ -354,9 +354,7 @@ function renderPlan(){
   v.innerHTML = `
     ${d.date==='2027-01-01' ? heroHtml(d.scene,'2027 元旦・新年快樂','Happy New Year',false,d.photo,d.pos,true) : d.date==='2026-12-31' ? heroHtml(d.scene,'大晦日・一起跨年倒數','Countdown',false,d.photo,d.pos).replace('class="hero ','class="hero eve ') + '' : heroHtml(d.scene,'東京年末自由行','Tokyo',false,d.photo,d.pos)}
     <div class="dchips" role="tablist" aria-label="選擇日期">${chips}</div>
-    <div class="wcard">${hollyI}<div class="w-ic">${icon('snow',24)}</div>
-      <div class="w-tx"><b>${esc(d.area)}　<span class="num">${d.cl[0]}°C / ${d.cl[1]}°C</span></b><span>往年年底到 1 月初平均・保暖要做足</span></div>
-      <span class="w-tag">WEATHER</span></div>
+    ${weatherHtml(d)}
     <div class="sech"><h2>Day ${sel+1}：${esc(d.title)}</h2><span>ITINERARY</span></div>
     ${d.note?`<p class="daynote">${esc(d.note)}</p>`:''}
     <div class="cards">${cards}</div>
@@ -476,6 +474,42 @@ function crewHtml(){
     ${ids.length === 1 ? '<p class="m-hint">目前只有你。旅伴要從邀請連結登入，或在「資訊」頁輸入上面的邀請碼，才會出現在這裡。</p>' : ''}</div>`;
 }
 const renderCrew = () => { const c = document.getElementById('crew'); if (c) c.innerHTML = crewHtml(); };
+
+/* ---------- 天氣：Open-Meteo 預報（約 16 天內），還沒到就顯示往年平均 ---------- */
+const WX_LOC = { tokyo:[35.6812,139.7671], fuji:[35.4983,138.7690] };
+const wxLoc = d => d.scene === 'fuji' ? 'fuji' : 'tokyo';
+let WX = (() => { try { return JSON.parse(localStorage.getItem('tk-wx') || 'null') || {}; } catch(e){ return {}; } })();
+const WMO = c => c === 0 ? ['☀️','晴'] : c <= 2 ? ['🌤️','晴時多雲'] : c === 3 ? ['☁️','陰'] : c <= 48 ? ['🌫️','有霧']
+  : c <= 57 ? ['🌦️','毛毛雨'] : c <= 67 ? ['🌧️','下雨'] : c <= 77 ? ['❄️','下雪'] : c <= 82 ? ['🌧️','陣雨'] : c <= 86 ? ['🌨️','陣雪'] : ['⛈️','雷雨'];
+function weatherHtml(d){
+  const f = WX[wxLoc(d)] && WX[wxLoc(d)].days && WX[wxLoc(d)].days[d.date];
+  if (f){
+    const [em, lab] = WMO(f.c), cold = f.lo <= 0 ? '・會到 0 度以下，暖暖包帶好' : '';
+    const rain = f.p != null && f.p >= 30 ? `・降雨機率 ${f.p}%，帶傘` : (f.p != null ? `・降雨機率 ${f.p}%` : '');
+    return `<div class="wcard">${hollyI}<div class="w-ic w-em">${em}</div>
+      <div class="w-tx"><b>${esc(d.area)}　<span class="num">${Math.round(f.hi)}°C / ${Math.round(f.lo)}°C</span></b><span>${lab}${rain}${cold}</span></div>
+      <span class="w-tag live">預報</span></div>`;
+  }
+  return `<div class="wcard">${hollyI}<div class="w-ic">${icon('snow',24)}</div>
+      <div class="w-tx"><b>${esc(d.area)}　<span class="num">${d.cl[0]}°C / ${d.cl[1]}°C</span></b><span>出發前約兩週自動換成真的預報</span></div>
+      <span class="w-tag">往年平均</span></div>`;
+}
+async function loadWeather(){
+  const now = Date.now(), last = DAYS[DAYS.length - 1].date;
+  if (new Date(last + 'T23:59:00+09:00').getTime() < now) return;           // 旅行結束就不抓了
+  if (new Date(DAYS[0].date + 'T00:00:00+09:00').getTime() - now > 17 * 864e5) return; // 還太早，預報抓不到
+  let changed = false;
+  await Promise.all(Object.entries(WX_LOC).map(async ([k, [la, lo]]) => {
+    if (WX[k] && now - WX[k].at < 3 * 3600e3) return;                         // 3 小時內抓過就用快取
+    try {
+      const r = await fetch(`https://api.open-meteo.com/v1/forecast?latitude=${la}&longitude=${lo}&daily=weather_code,temperature_2m_max,temperature_2m_min,precipitation_probability_max&timezone=Asia%2FTokyo&forecast_days=16`);
+      if (!r.ok) return; const j = await r.json(), dd = j.daily || {}, days = {};
+      (dd.time || []).forEach((t, i) => { if (dd.temperature_2m_max[i] != null) days[t] = { hi: dd.temperature_2m_max[i], lo: dd.temperature_2m_min[i], c: dd.weather_code[i], p: dd.precipitation_probability_max ? dd.precipitation_probability_max[i] : null }; });
+      WX[k] = { at: now, days }; changed = true;
+    } catch(e){}
+  }));
+  if (changed){ try { localStorage.setItem('tk-wx', JSON.stringify(WX)); } catch(e){} renderPlan(); fillHeroStatus(); }
+}
 
 /* ---------- Shared data：記帳 + 購物清單（大家一起改） ---------- */
 let DB = null, USER = null, canWrite = true, isOwner = false;
@@ -844,7 +878,7 @@ document.addEventListener('keydown', e => {
 });
 
 function startApp(){
-renderHeader(); renderPlan(); renderMoney(); renderInfo(); renderShop(); fillHeroStatus();
+renderHeader(); renderPlan(); renderMoney(); renderInfo(); renderShop(); fillHeroStatus(); loadWeather();
 initDb();
 show(location.hash.slice(1) || store.get('tk-view','plan'));
 setInterval(() => { const before = now.date; renderHeader(); if (now.date !== before || DAYS[sel].date === now.date) renderPlan(); fillHeroStatus(); }, 60000);
