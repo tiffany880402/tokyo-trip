@@ -454,13 +454,28 @@ function renderInfo(){
     <div class="card acct"><div class="sec-title"><span>帳號</span></div>
       <div class="acct-r">${AUTH && AUTH.photoURL ? `<img src="${esc(AUTH.photoURL)}" alt="" referrerpolicy="no-referrer">` : `<span class="acct-av">${esc([...(AUTH && AUTH.displayName || '我')][0])}</span>`}
         <div><b>${esc(AUTH && AUTH.displayName || '')}</b><small>${esc(AUTH && AUTH.email || '')}</small></div></div>
+      <div id="crew">${crewHtml()}</div>
       <div class="m-acts"><button class="btn" data-invite>邀請旅伴</button><button class="btn ghost" data-logout>登出</button></div>
+      <details class="sw-trip"><summary>旅伴看不到我？用邀請碼換到別的行程</summary>
+        <p class="m-hint">如果你不小心自己建了一趟行程，輸入主揪給你的 6 碼邀請碼，就會換到他的行程。</p>
+        <form id="sw-join" class="g-join"><input id="sw-code" maxlength="6" placeholder="6 碼邀請碼" autocomplete="off" autocapitalize="characters"><button class="btn" type="submit">換過去</button></form>
+      </details>
     </div>
     <div class="card"><div class="sec-title"><span>好用 App</span></div>
       <ul class="plain"><li>乘換案內、Google 地圖：查電車</li><li>Tabelog：查餐廳</li><li>GO：叫計程車</li><li>tenki.jp：天氣</li></ul>
     </div>
 `;
 }
+
+function crewHtml(){
+  const ids = (typeof S !== 'undefined' && S.members) || [];
+  const av = id => { const d = MEMBER_DATA[id] || {}, n = d.name || (AUTH && id === AUTH.uid && AUTH.displayName) || '旅伴';
+    return `<li>${d.photo ? `<img src="${esc(d.photo)}" alt="" referrerpolicy="no-referrer">` : `<span class="acct-av">${esc([...n][0])}</span>`}<span>${esc(n)}${AUTH && id === AUTH.uid ? '<small>（我）</small>' : ''}${TRIP && id === TRIP.ownerId ? '<em>主揪</em>' : ''}</span></li>`; };
+  return `<div class="crew"><div class="crew-h">這趟行程的旅伴（${ids.length} 人）<span class="num">邀請碼 ${esc(TRIP ? TRIP.code : '')}</span></div>
+    ${ids.length ? `<ul>${ids.map(av).join('')}</ul>` : '<p class="m-hint">讀取中…</p>'}
+    ${ids.length === 1 ? '<p class="m-hint">目前只有你。旅伴要從邀請連結登入，或在「資訊」頁輸入上面的邀請碼，才會出現在這裡。</p>' : ''}</div>`;
+}
+const renderCrew = () => { const c = document.getElementById('crew'); if (c) c.innerHTML = crewHtml(); };
 
 /* ---------- Shared data：記帳 + 購物清單（大家一起改） ---------- */
 let DB = null, USER = null, canWrite = true, isOwner = false;
@@ -544,7 +559,7 @@ async function initDb(){
     s.docs.forEach(d => { MEMBER_DATA[d.id] = d.data() || {}; });
     S.members = s.docs.map(d => d.id).filter(id => /^[\w.:@+~-]+$/.test(id));
     try { if (USER && USER.profiles && S.members.length){ const ps = await USER.profiles(S.members); S.members.forEach(id => { const n = ps && ps[id] && ps[id].name; if (n) NAMES[id] = n; }); } } catch(e){}
-    renderMoney(); if (modalKind === 'exp') renderExpModal(); }, () => {});
+    renderMoney(); renderCrew(); if (modalKind === 'exp') renderExpModal(); }, e => console.warn('members', e));
   DB.collection('shop').orderBy('createdAt','asc').onSnapshot(s => {
     S.shop = s.docs.map(d => ({id:d.id, ...d.data()})).filter(x => typeof x.text === 'string');
     got('shop', s); renderShop(); }, fail);
@@ -838,7 +853,8 @@ setInterval(() => { const before = now.date; renderHeader(); if (now.date !== be
 /* ---------- 開機：Google 登入 → 找到或建立／加入行程 ---------- */
 const gate = document.getElementById('gate');
 const joinFromHash = (location.hash.match(/^#join-([A-Za-z0-9]{6})$/) || [])[1];
-if (joinFromHash){ store.set('tk-pending-join', joinFromHash.toUpperCase()); history.replaceState(null, '', location.pathname); }
+if (joinFromHash) store.set('tk-pending-join', joinFromHash.toUpperCase());
+const inApp = /Line\/|FBAN|FBAV|Instagram|MicroMessenger/i.test(navigator.userAgent);
 const googleG = '<svg viewBox="0 0 48 48" width="20" height="20" aria-hidden="true"><path fill="#FFC107" d="M43.6 20.5H42V20H24v8h11.3C33.7 32.7 29.2 36 24 36c-6.6 0-12-5.4-12-12s5.4-12 12-12c3 0 5.8 1.1 7.9 3l5.7-5.7C34 6.1 29.3 4 24 4 12.9 4 4 12.9 4 24s8.9 20 20 20 20-8.9 20-20c0-1.3-.1-2.4-.4-3.5z"/><path fill="#FF3D00" d="M6.3 14.7l6.6 4.8C14.7 15.1 19 12 24 12c3 0 5.8 1.1 7.9 3l5.7-5.7C34 6.1 29.3 4 24 4 16.3 4 9.7 8.3 6.3 14.7z"/><path fill="#4CAF50" d="M24 44c5.2 0 9.9-2 13.4-5.2l-6.2-5.2C29.2 35.1 26.7 36 24 36c-5.2 0-9.6-3.3-11.3-8l-6.5 5C9.5 39.6 16.2 44 24 44z"/><path fill="#1976D2" d="M43.6 20.5H42V20H24v8h11.3c-.8 2.2-2.2 4.2-4.1 5.6l6.2 5.2C37 39.2 44 34 44 24c0-1.3-.1-2.4-.4-3.5z"/></svg>';
 function gateHtml(state, msg){
   const pending = store.get('tk-pending-join', '');
@@ -846,18 +862,20 @@ function gateHtml(state, msg){
   let body = '';
   if (state === 'loading') body = `<p class="g-p">讀取中…</p>`;
   else if (state === 'login') body = `${pending ? `<p class="g-p">你收到旅伴的邀請！登入後會自動加入這趟行程。</p>` : `<p class="g-p">用 Google 帳號登入，就能一起看行程、記帳、改購物清單。</p>`}
+      ${inApp ? `<p class="g-err">你是在 LINE／IG 裡打開的，Google 不能在這裡登入。請按右上角「⋯」選「用預設瀏覽器開啟」（Safari 或 Chrome），再登入。</p>` : ''}
       <button class="g-btn" data-g="login">${googleG}用 Google 登入</button>`;
   else if (state === 'choose') body = `<p class="g-p">嗨 ${esc(AUTH && AUTH.displayName || '')}！你還沒有加入東京行程。</p>
       ${msg ? `<p class="g-err">${esc(msg)}</p>` : ''}
       <form id="g-join" class="g-join"><input id="g-code" maxlength="6" placeholder="輸入 6 碼邀請碼" autocomplete="off" autocapitalize="characters"><button class="g-btn sm" type="submit">加入</button></form>
       <div class="g-or">或</div>
       <button class="g-btn ghost" data-g="create">我是主揪，建立這趟行程</button>
+      <p class="g-p" style="font-size:12.5px;opacity:.8">旅伴請不要按建立，要輸入主揪給的邀請碼，不然會變成兩趟分開的行程。</p>
       <button class="g-link" data-g="logout">換一個帳號</button>`;
   else body = `<p class="g-err">${esc(msg || '發生錯誤')}</p>`;
   return `<div class="g-card">${head}<div class="g-body">${body}</div></div>`;
 }
 function setGate(state, msg){ gate.hidden = false; gate.innerHTML = gateHtml(state, msg); }
-function enter(t){ TRIP = t; gate.hidden = true; gate.innerHTML = ''; startApp(); }
+function enter(t){ if (location.hash) history.replaceState(null, '', location.pathname); TRIP = t; gate.hidden = true; gate.innerHTML = ''; startApp(); }
 async function afterLogin(u){
   AUTH = u; setGate('loading');
   const code = store.get('tk-pending-join', '');
@@ -874,6 +892,13 @@ gate.addEventListener('click', async e => {
   if (b.dataset.g === 'login') signInGoogle().catch(err => { if (err && err.code !== 'auth/popup-closed-by-user' && err.code !== 'auth/cancelled-popup-request') toast('登入沒有成功，請再試一次'); });
   if (b.dataset.g === 'logout') logOut();
   if (b.dataset.g === 'create'){ b.disabled = true; b.textContent = '建立中…'; try { enter(await createTrip(AUTH)); } catch(err){ console.warn(err); setGate('choose', '建立沒有成功，請再試一次'); } }
+});
+document.addEventListener('submit', async e => {
+  if (e.target.id !== 'sw-join') return; e.preventDefault();
+  const code = $('#sw-code').value.trim().toUpperCase(); if (!code) return;
+  if (TRIP && code === TRIP.code){ toast('你已經在這趟行程裡了'); return; }
+  try { await joinTrip(AUTH, code); toast('換好了，重新整理中…'); setTimeout(() => location.reload(), 600); }
+  catch(err){ toast(err.message === 'not-found' ? '找不到這個邀請碼' : err.message === 'bad-code' ? '邀請碼是 6 個字' : '沒有成功，請再試一次'); }
 });
 gate.addEventListener('submit', async e => {
   if (e.target.id !== 'g-join') return; e.preventDefault();
