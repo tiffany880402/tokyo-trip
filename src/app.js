@@ -654,7 +654,7 @@ function renderMoney(){
         ${st.tx.length ? `<ul class="st-tx">${st.tx.map(([a,b,x]) => `<li><span class="st-p">${esc(nm(a))}</span><span class="st-arrow"><i></i>${giftI}</span><span class="st-p">${esc(nm(b))}</span><b class="num">${big(x)}</b></li>`).join('')}</ul>`
           : `<p class="m-empty">${st.shared ? '目前大家剛好打平，聖誕快樂！' : '還沒有要平分的帳。'}</p>`}
       </div>`; })()}
-    <div class="mb"><h3>支出明細</h3><button class="btn" data-add${can()?'':' disabled'}>＋ 記一筆</button></div>
+    <div class="mb"><h3>支出明細</h3><button class="btn" data-add${can()?'':' disabled'}>${PLUS}記一筆</button></div>
     <div class="seg">${[['all','全部'],...METHODS].map(([k,l]) => `<button class="${mFilter===k?'on':''}" data-mf="${k}">${l}</button>`).join('')}</div>
     ${people.length > 1 ? `<div class="pf">${[['all','所有人'],...people.map(p => [p,nm(p)])].map(([k,l]) => `<button class="chip2 sm${pFilter===k?' on':''}" data-pf="${esc(k)}">${esc(l)}</button>`).join('')}</div>` : ''}
     <div class="ml">${dates.length ? dates.map(ds => `<div class="ml-d">${esc(dayLabel(ds))}<span class="num">${yen(sum(groups[ds]))}</span></div>
@@ -693,7 +693,7 @@ function renderExpModal(){
     <div class="mf-l">幣別<div class="seg sm">${['JPY','TWD'].map(c => `<button type="button" class="${F.cur===c?'on':''}" data-ecur="${c}">${c}</button>`).join('')}</div></div>
     <div class="mf-l">付款人<div class="chips">${mates().map(m => `<button type="button" class="chip2${m===F.payer?' on':''}" data-epayer="${esc(m)}">${esc(nm(m))}</button>`).join('')}
       ${F.addingMate ? `<span class="m-addmate"><input id="e-mate" maxlength="12" placeholder="${mates().length?'名字':'輸入付款人名字'}" value="${esc(F.newMate||'')}">${S.mates.length?'<button type="button" class="chip2 on" data-emate-ok>加入</button>':''}</span>`
-        : `<button type="button" class="chip2 add" data-emate-add>＋ 新增</button>`}</div></div>
+        : `<button type="button" class="chip2 add" data-emate-add>${PLUS}新增</button>`}</div></div>
     ${mates().length > 1 ? (() => { const sp = (F.split || mates()).filter(m => mates().includes(m)); const n = sp.length, raw = +String(F.amount).replace(/[^\d.]/g,'');
       const each = n && raw > 0 ? (F.cur === 'TWD' ? raw / RATE() : raw) / n : 0;
       return `<div class="mf-l"><span class="mf-row">分給誰<span class="mf-quick"><button type="button" data-esplit="all">全部</button><button type="button" data-esplit="me">只有付款人</button></span></span>
@@ -741,6 +741,7 @@ async function addMateFromModal(){
   renderExpModal();
 }
 
+const PLUS = '<svg class="plus" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14M5 12h14" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" fill="none"/></svg>';
 /* ---- 購物清單（共用、一般清單） ---- */
 function renderShop(){
   const box = $('#v-list'); if (!box) return;
@@ -760,7 +761,7 @@ function renderShop(){
     ${heroHtml('city','購物清單・大家一起','Shopping',true,'d6')}
     ${noteHtml()}
     <div class="card sh-card">${hollyI}
-      <form id="m-shop" class="sh-add"><input id="f-shop" maxlength="60" placeholder="新增想買的東西" value="${esc(addVal)}"${dis}><button class="sh-plus" type="submit" aria-label="新增"${dis}>＋</button></form>
+      <form id="m-shop" class="sh-add"><input id="f-shop" maxlength="60" placeholder="新增想買的東西" value="${esc(addVal)}"${dis}><button class="sh-plus" type="submit" aria-label="新增"${dis}>${PLUS}</button></form>
       ${todo.length ? `<ul class="sh-list">${todo.map(row).join('')}</ul>` : `<p class="m-empty">${S.state==='loading'?'讀取中…':(done.length?'都買齊了，聖誕快樂！':'清單是空的，把想買的加進來，當作送自己的聖誕禮物！')}</p>`}
       ${done.length ? `<details class="sh-done" id="sh-done"${openDone?' open':''}><summary>已買 ${done.length} 項</summary><ul class="sh-list">${done.map(row).join('')}</ul>
         <button class="btn ghost sm" data-shop-clear${dis}>${delArm==='__clear'?'再按一次清除':'清除已買'}</button></details>` : ''}
